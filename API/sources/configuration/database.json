@@ -1,0 +1,44 @@
+{
+    "structure":[
+        {
+            "TableName": "watchlist",
+            "KeySchema": [
+                {
+                    "AttributeName": "user",
+                    "KeyType": "HASH"
+                    },
+                {
+                    "AttributeName": "portfolio",
+                    "KeyType": "RANGE"
+                    },
+    
+                ],
+            "AttributeDefinitions": [
+                {
+                    "AttributeName": "user",
+                    "AttributeType": "S"
+                    },
+                {
+                    "AttributeName": "portfolio",
+                    "AttributeType": "S"
+                    },
+                {
+                    "AttributeName": "creation datetime",
+                    "AttributeType": "S"
+                    },
+                {
+                    "AttributeName": "last_update_datetime",
+                    "AttributeType": "S"
+                    },
+                {
+                    "AttributeName": "symbols_list",
+                    "AttributeType": "SS"
+                    },
+                {
+                    "AttributeName": "optimal_distribution",
+                    "AttributeType": "SS"
+                    },
+                ]
+            }
+        ]
+    }

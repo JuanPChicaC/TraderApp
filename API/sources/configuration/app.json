@@ -1,0 +1,13 @@
+{
+    "production":{
+        "database":{
+            "host":""
+            }
+        },
+    "development":{
+        "database":{
+            "host":""
+            }            
+        }
+
+    }
