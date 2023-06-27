@@ -38,7 +38,8 @@
                     "AttributeName": "optimal_distribution",
                     "AttributeType": "SS"
                     },
-                ]
+                ],
+            "BillingMode" : "PAY_PER_REQUEST"
             }
         ]
     }
