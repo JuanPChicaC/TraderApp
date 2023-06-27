@@ -1,7 +1,7 @@
 from boto3 import resource
 from os import getenv
-
-
+from .common import get_db_tables_config
+from .common import get_db_tables_config
 
 dynamodb = resource(
     "dynamodb",
@@ -16,6 +16,15 @@ dynamodb = resource(
         )
     )
 
+
+def create_tables():
+    try:
+        for table in get_db_tables_config()["structure"]:
+            dynamodb.create_table(
+                **table
+                )
+    except Exception as e:
+        print(e)
 
 
 
