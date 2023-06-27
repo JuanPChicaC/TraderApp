@@ -8,7 +8,10 @@ Created on Mon Jun 26 20:23:25 2023
 import requests
 from os import getenv
 import re
-from common import get_supp_queries
+from .common import get_supp_queries
+
+
+
 
 class Supplier():
 
@@ -25,6 +28,16 @@ class Supplier():
                 key= self.__key
                 )
             }
+    
+    @property
+    def symbols_info_input(self):
+        
+        params = get_supp_queries()["stock_symbols_universe"]["params"]
+        required_fields = get_supp_queries()["stock_symbols_universe"]["required_fields"]
+        
+        return {**params,**required_fields}
+        
+        
         
     def set_endpoint_url(self, endpoint:str, params:dict):
         return "{url}{endpoint}{params_statement}".format(
@@ -128,41 +141,42 @@ class Supplier():
         
         response = requests.get(
             url,
-            self.__headers
+            headers = self.__headers
             )
         
         jsonified_reponse = response.json()
         
-        return {
-            "status_code": response.status_code,
-            "content" : jsonified_reponse["results"]
-            }
-        
-        
+        if "results" in jsonified_reponse.keys():
+            return {
+                "status_code": response.status_code,
+                "content" : jsonified_reponse["results"]
+                }
+        else:
+            return jsonified_reponse
+    
+    
+    def get_information(self, queryname:str, **kwargs):
 
-    def get_symbols_universe(self,**kwargs):
-        
-        
         rf_pass, rf_sanity_content = self.required_fields_sanity_check(
-            get_supp_queries()["stock_symbols_universe"]["required_fields"], 
+            get_supp_queries()[queryname]["required_fields"], 
             kwargs, 
-            get_supp_queries()["stock_symbols_universe"]["validations"]
+            get_supp_queries()[queryname]["validations"]
             )
       
         if not rf_pass:
             return {
                 "status_code": 404,
-                "message" : rf_sanity_content
+                "content" : rf_sanity_content
                 }
         
         params_content = self.params_sanity_check(
-            get_supp_queries()["stock_symbols_universe"]["params"], 
+            get_supp_queries()[queryname]["params"], 
             kwargs, 
-            get_supp_queries()["stock_symbols_universe"]["validations"]
+            get_supp_queries()[queryname]["validations"]
             )
         
         query_url = self.set_endpoint_url(
-            get_supp_queries["queries"]["stock_symbols_universe"]["endpoint"],
+            get_supp_queries()[queryname]["endpoint"],
             params_content
             )
         
@@ -175,15 +189,12 @@ class Supplier():
             )
         
         return result
+
+    def get_symbols_universe(self,**kwargs):
         
-        
-    def get_historical_data(self,stock_ticker:str):
-        
-        pass
-    
-        
-        
-    
-    
-    
+        return self.get_information(
+            "stock_symbols_universe",
+            **kwargs
+            )
+
     
