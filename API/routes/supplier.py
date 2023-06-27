@@ -40,6 +40,33 @@ def get_symbols():
             status_code = 500
             )
 
+@external_api.get(
+    "/bars_information/{stocksTicker}/{date_from}/{date_to}"
+    )
+def get_symbol_bars(
+    stocksTicker:str, date_from:str, date_to:str, multiplier:str=None,
+    timespan:str=None,adjusted:str = None,sort:str = None,
+    limit:str = None
+    ):
+    arguments = locals()
+    
+    try:
+        answer = get_symbols_data(
+            **arguments
+            )
+        return JSONResponse(
+            content = answer,
+            status_code=200
+            )
+    
+    except ClientError as e:
+        return JSONResponse(
+            content = e.response["Error"],
+            status_code = 500
+            )
+
+
+
 
     
     

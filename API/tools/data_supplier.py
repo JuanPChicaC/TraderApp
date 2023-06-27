@@ -196,5 +196,11 @@ class Supplier():
             "stock_symbols_universe",
             **kwargs
             )
-
-    
+        
+        
+    def get_historical_data(self,**kwargs):
+        
+        return self.get_information(
+            "stocks_historical_data",
+            **kwargs
+            )    
