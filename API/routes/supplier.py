@@ -65,6 +65,50 @@ def get_symbol_bars(
             status_code = 500
             )
 
+@external_api.get(
+    "/export/bars_information/{stocksTicker}/{date_from}/{date_to}"
+    )
+async def get_symbol_bars_csv(
+    stocksTicker:str, date_from:str, date_to:str, multiplier:str=None,
+    timespan:str=None,adjusted:str = None,sort:str = None,
+    limit:str = None
+    ):
+    arguments = locals()
+    
+    try:
+        answer = get_symbols_data(
+            **arguments
+            )
+        
+        df = get_df(
+            answer
+            )
+        
+        stream = io.StringIO()
+        df.to_csv(
+            stream,
+            index=False
+            )
+        
+        response = StreamingResponse(
+            iter([stream.getvalue()]),
+            media_type = "text/csv"
+            )
+        
+        response.headers["Content-Disposition"] = "attachment; filename={symbols}_{datetime}_info.csv".format(
+            symbols = stocksTicker.replace(" ", "").replace(",", "_"),
+            datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
+            )
+        
+        
+        
+        return response
+    
+    except ClientError as e:
+        return JSONResponse(
+            content = e.response["Error"],
+            status_code = 500
+            )
 
 
 
