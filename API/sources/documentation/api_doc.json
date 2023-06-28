@@ -16,11 +16,7 @@
             },
         {
             "name": "Portfolio Manager",
-            "description": "<b>Operations with Portfolios</b>.<br> it let the user administrate the portfolios that it want. <br> It include extract historical information for the portfolios",
-            "externalDocs": {
-                "description": "Items external docs",
-                "url": "https://fastapi.tiangolo.com/"
-                }
+            "description": "<b>Operations with Portfolios</b>.<br> it let the user administrate the portfolios that it want. <br> It include extract historical information for the portfolios"
             }
         ]
 
