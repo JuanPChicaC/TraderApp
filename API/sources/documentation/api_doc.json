@@ -1,0 +1,27 @@
+{
+    "title":"TraderApp",
+    "description":{
+        },
+    "version":"1",
+    "contact":{
+        "name": "Juan Pablo Chica",
+        "url": "https://github.com/JuanPChicaC",
+        "email": "juan.pablo.chicacastrillon@gmail.com"
+        },
+
+    "openapi_tags" : [
+        {
+            "name": "Information Provider",
+            "description": "<b>Operations with Polygon</b>: <br>  It let the user consume historical information of symbols and market prices from thrid party provider.<br>It includes extract information into a csv file"
+            },
+        {
+            "name": "Portfolio Manager",
+            "description": "<b>Operations with Portfolios</b>.<br> it let the user administrate the portfolios that it want. <br> It include extract historical information for the portfolios",
+            "externalDocs": {
+                "description": "Items external docs",
+                "url": "https://fastapi.tiangolo.com/"
+                }
+            }
+        ]
+
+    }
