@@ -1,5 +1,12 @@
 import os
 import sys
+from fastapi import APIRouter
+from botocore.exceptions import ClientError
+from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse
+import io
+from datetime import datetime
+
 sys.path.append(
     os.path.dirname(
         os.path.dirname(
@@ -11,19 +18,13 @@ sys.path.append(
     )
 
 from operations.supplier import *
-from fastapi import APIRouter
-from botocore.exceptions import ClientError
-from fastapi.responses import JSONResponse
-from fastapi.responses import StreamingResponse
-import io
-from datetime import datetime
         
 external_api = APIRouter()
 
 
-
 @external_api.get(
-    "/get_symbols_info"
+    "/get_symbols_info",
+    tags=["Information Provider"]
     )
 def get_symbols():
     arguments = locals()
@@ -41,7 +42,8 @@ def get_symbols():
             )
 
 @external_api.get(
-    "/bars_information/{stocksTicker}/{date_from}/{date_to}"
+    "/bars_information/{stocksTicker}/{date_from}/{date_to}",
+    tags=["Information Provider"]
     )
 def get_symbol_bars(
     stocksTicker:str, date_from:str, date_to:str, multiplier:str=None,
@@ -66,7 +68,9 @@ def get_symbol_bars(
             )
 
 @external_api.get(
-    "/export/bars_information/{stocksTicker}/{date_from}/{date_to}"
+    "/export/bars_information/{stocksTicker}/{date_from}/{date_to}",
+    tags=["Information Provider"]
+    
     )
 async def get_symbol_bars_csv(
     stocksTicker:str, date_from:str, date_to:str, multiplier:str=None,
@@ -99,9 +103,6 @@ async def get_symbol_bars_csv(
             symbols = stocksTicker.replace(" ", "").replace(",", "_"),
             datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
             )
-        
-        
-        
         return response
     
     except ClientError as e:
