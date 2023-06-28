@@ -10,8 +10,7 @@
                 {
                     "AttributeName": "portfolio",
                     "KeyType": "RANGE"
-                    },
-    
+                    }   
                 ],
             "AttributeDefinitions": [
                 {
@@ -21,23 +20,7 @@
                 {
                     "AttributeName": "portfolio",
                     "AttributeType": "S"
-                    },
-                {
-                    "AttributeName": "creation datetime",
-                    "AttributeType": "S"
-                    },
-                {
-                    "AttributeName": "last_update_datetime",
-                    "AttributeType": "S"
-                    },
-                {
-                    "AttributeName": "symbols_list",
-                    "AttributeType": "SS"
-                    },
-                {
-                    "AttributeName": "optimal_distribution",
-                    "AttributeType": "SS"
-                    },
+                    }
                 ],
             "BillingMode" : "PAY_PER_REQUEST"
             }

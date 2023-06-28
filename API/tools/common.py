@@ -39,3 +39,18 @@ def get_db_tables_config():
             file.close()
     
     return __db_tables_config
+
+__api_doc = None
+
+def get_api_doc():
+    
+    global __api_doc
+    
+    if not __api_doc:
+        with open(f"{api_path}/sources/documentation/api_doc.json","r") as file:
+            __api_doc = json.loads(
+                file.read()
+                )
+            file.close()
+    
+    return __api_doc
