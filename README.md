@@ -1,3 +1,28 @@
+# TraderAPP
+###### powered by
+
+<img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png" alt="drawing" width="200"/> <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" alt="drawing" width="200"/><img src="https://www.nginx.com/wp-content/uploads/2018/08/NGINX-logo-rgb-large.png" alt="drawing" width="200"/> 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Gunicorn_logo_2010.svg/2560px-Gunicorn_logo_2010.svg.png" alt="drawing" width="200"/> <img src="https://raw.githubusercontent.com/tomchristie/uvicorn/master/docs/uvicorn.png" alt="drawing" width="200"/> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/2560px-Amazon_Web_Services_Logo.svg.png" alt="drawing" width="200"/>
+
+## API Documentation
+<http://ec2-3-16-255-125.us-east-2.compute.amazonaws.com/docs>
+
+## Architecture
+<img src="https://github.com/JuanPChicaC/TraderApp/blob/main/API/sources/documentation/TraderAPP%20AWS%20Architecture.png?raw=true"/>
+
+## Data Desgin
+<img src="https://github.com/JuanPChicaC/TraderApp/blob/main/API/sources/documentation/Database%20ER%20diagram.png?raw=true"/>
+
+## Security 
+### EC2
+<img src="https://github.com/JuanPChicaC/TraderApp/blob/main/API/sources/documentation/ec2_security_group.png?raw=true"/>
+
+### DynamoDB
+<img src="https://github.com/JuanPChicaC/TraderApp/blob/main/API/sources/documentation/dynamodb_subnet_group.png?raw=true"/>
+
+## Budget Control
+<img src="https://github.com/JuanPChicaC/TraderApp/blob/main/API/sources/documentation/aws_budget.png?raw=true"/>
+
 ## Deploy
 ### Server Setup
 1. update the packages list 
@@ -74,4 +99,3 @@
     ```sh
     gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker
     ```
-
