@@ -78,7 +78,7 @@ def get_data(
     "/portfolio_csv_data",
     tags = ["Portfolio Manager"]
     )
-async def get_csv(
+def get_csv(
         user:str,
         portfolio:str,
         date_to:str = get_date_to(),

@@ -62,7 +62,6 @@ def transform_json_df(symbol_info:tuple):
     
 def get_df(answer): 
     
-    
     data_array = [
         (symbol,info["content"]) for symbol,info in answer.items() if info["status_code"] == 200
         ]
@@ -77,11 +76,6 @@ def get_df(answer):
         )  
     
     return  df
-
-
-
-
-
 
 
 

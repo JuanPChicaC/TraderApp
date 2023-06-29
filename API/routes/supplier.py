@@ -72,7 +72,7 @@ def get_symbol_bars(
     tags=["Information Provider"]
     
     )
-async def get_symbol_bars_csv(
+def get_symbol_bars_csv(
     stocksTicker:str, date_from:str, date_to:str, multiplier:str=None,
     timespan:str=None,adjusted:str = None,sort:str = None,
     limit:str = None

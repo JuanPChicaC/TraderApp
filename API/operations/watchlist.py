@@ -6,6 +6,7 @@ from boto3.dynamodb.conditions import Key
 from pandas import DataFrame, concat
 from .supplier import get_symbols_data, get_df
 import io
+import json
 from fastapi.responses import StreamingResponse
 from datetime import datetime
 sys.path.append(
@@ -126,7 +127,7 @@ def get_investment_suggestion(portfolio_info:dict):
         ))
     
     return True, {
-        "assets" : portfolio_info["symbols_list"],
+        "assets" : assets,
         "optimal_distribution" : optimal_distribution
         }
     
@@ -165,8 +166,20 @@ def get_portfolios(user: str, portfolio:str):
         else: 
             response = table.query(
                 KeyConditionExpression=Key("user").eq(user) & Key("portfolio").eq(portfolio)
-            )    
-        return response["Items"]  
+            ) 
+        
+        if len(response["Items"]) < 1:
+            return JSONResponse(
+                content = {
+                    "message" : f"There's no results for portfolio '{portfolio}'"
+                    },
+                status_code=400
+                )            
+        else:
+            return JSONResponse(
+                content = response["Items"] ,
+                status_code=200
+                )             
     
     except ClientError as e:
         return JSONResponse(
@@ -192,11 +205,19 @@ def delete_portfolio(dportfolio:dict):
 def get_portfolio_data(**kwargs):
     try:
          
-        portfolio_list = get_portfolios(
+        portfolio_list_response = get_portfolios(
             kwargs['user'],
             kwargs["portfolio"]
             )
+
         
+        if portfolio_list_response.status_code != 200:
+            return portfolio_list_response
+       
+        portfolio_list = json.loads(
+            portfolio_list_response.body.decode()
+            )   
+       
         portfolio = portfolio_list[0]
         
         kwargs["stocksTicker"] = ",".join(
@@ -206,8 +227,11 @@ def get_portfolio_data(**kwargs):
         data = get_symbols_data(
             **kwargs
             )
-        
-        return data
+        return JSONResponse(
+            content = data,
+            status_code = 200
+            )
+
         
     except ClientError as e:
         return JSONResponse(
@@ -218,8 +242,16 @@ def get_portfolio_data(**kwargs):
 def get_portfolio_data_csv(**kwargs):
     try:
         
-        data =get_portfolio_data(
+        data_response = get_portfolio_data(
             **kwargs
+            )
+        
+
+        if data_response.status_code != 200:
+            return data_response
+        
+        data = json.loads(
+            data_response.body.decode()
             )
 
         df = get_df(
@@ -241,7 +273,9 @@ def get_portfolio_data_csv(**kwargs):
             portfolio = kwargs["portfolio"],
             datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
             )
-        return response        
+ 
+        return response
+    
     except ClientError as e:
         return JSONResponse(
             content = e.response["Error"],
@@ -252,10 +286,18 @@ def get_portfolio_data_csv(**kwargs):
 def add_portfolio_symbols(portfolio_info:dict):
     try:
         
-        current_portfolios = get_portfolios(
+        current_portfolios_response = get_portfolios(
             portfolio_info["user"],
             portfolio_info["portfolio"]
             )
+
+        if current_portfolios_response.status_code != 200:
+            return current_portfolios_response
+
+        current_portfolios = json.loads(
+            current_portfolios_response.body.decode()
+            )
+        
         current_portfolio = current_portfolios[0]
         
         current_symbols = current_portfolio["symbols_list"]
@@ -273,7 +315,7 @@ def add_portfolio_symbols(portfolio_info:dict):
             portfolio_info
             )
         if get_optimallity:
-            portfolio_info["distribution advice"] = invest_suggest["optimal_distribution"] 
+            portfolio_info["distribution_advice"] = invest_suggest["optimal_distribution"] 
             portfolio_info["symbols_list"] = invest_suggest["assets"]
         else: 
             portfolio_info["distribution advice"] = []    
@@ -286,7 +328,7 @@ def add_portfolio_symbols(portfolio_info:dict):
             UpdateExpression="""
                 SET 
                 symbols_list = :symbols_list, 
-                age = :portfolio, 
+                portfolio = :portfolio, 
                 last_update_datetime = :last_update_datetime,
                 date_to = :date_to,
                 date_from = :date_from,
@@ -295,18 +337,21 @@ def add_portfolio_symbols(portfolio_info:dict):
                 distribution_advice = :distribution_advice
                 """,
             ExpressionAttributeValues={
-                ":symbols_list": invest_suggest["assets"],
+                ":symbols_list": portfolio_info["symbols_list"],
                 ":portfolio": portfolio_info["portfolio"],
                 ":last_update_datetime": portfolio_info["last_update_datetime"],
                 ":date_to": portfolio_info["date_to"],
                 ":date_from": portfolio_info["date_from"],
                 ":multiplier": portfolio_info["multiplier"],
                 ":timespan": portfolio_info["timespan"],
-                ":distribution_advice": invest_suggest["optimal_distribution"]
+                ":distribution_advice" : portfolio_info["distribution_advice"]
                 }
             )   
-        return response
-
+        return JSONResponse(
+            content = response,
+            status_code = 200
+            )  
+    
     except ClientError as e:
         return JSONResponse(
             content = e.response["Error"],
@@ -317,10 +362,18 @@ def add_portfolio_symbols(portfolio_info:dict):
 def drop_portfolio_symbols(portfolio_info:dict):
     try:
         
-        current_portfolios = get_portfolios(
+        current_portfolios_response = get_portfolios(
             portfolio_info["user"],
             portfolio_info["portfolio"]
             )
+
+        if current_portfolios_response.status_code != 200:
+            return current_portfolios_response
+
+        current_portfolios = json.loads(
+            current_portfolios_response.body.decode()
+            )
+        
         current_portfolio = current_portfolios[0]
         
         current_symbols = current_portfolio["symbols_list"]
@@ -348,7 +401,7 @@ def drop_portfolio_symbols(portfolio_info:dict):
             UpdateExpression="""
                 SET 
                 symbols_list = :symbols_list, 
-                age = :portfolio, 
+                portfolio = :portfolio, 
                 last_update_datetime = :last_update_datetime,
                 date_to = :date_to,
                 date_from = :date_from,
@@ -357,14 +410,14 @@ def drop_portfolio_symbols(portfolio_info:dict):
                 distribution_advice = :distribution_advice
                 """,
             ExpressionAttributeValues={
-                ":symbols_list": invest_suggest["assets"],
-                ":portfolio": portfolio_info["portfolio"],
-                ":last_update_datetime": portfolio_info["last_update_datetime"],
-                ":date_to": portfolio_info["date_to"],
-                ":date_from": portfolio_info["date_from"],
-                ":multiplier": portfolio_info["multiplier"],
-                ":timespan": portfolio_info["timespan"],
-                ":distribution_advice": invest_suggest["optimal_distribution"]
+                ":symbols_list" : portfolio_info["symbols_list"],
+                ":portfolio" : portfolio_info["portfolio"],
+                ":last_update_datetime" : portfolio_info["last_update_datetime"],
+                ":date_to" : portfolio_info["date_to"],
+                ":date_from" : portfolio_info["date_from"],
+                ":multiplier" : portfolio_info["multiplier"],
+                ":timespan" : portfolio_info["timespan"],
+                ":distribution_advice" : portfolio_info["distribution_advice"]
                 }
             )   
         return response
