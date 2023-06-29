@@ -84,7 +84,7 @@ async def get_symbol_bars_csv(
             **arguments
             )
         
-        df = await get_df(
+        df = get_df(
             answer
             )
         

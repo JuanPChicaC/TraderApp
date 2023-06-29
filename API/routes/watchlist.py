@@ -78,7 +78,7 @@ def get_data(
     "/portfolio_csv_data",
     tags = ["Portfolio Manager"]
     )
-async def get_csv(
+def get_csv(
         user:str,
         portfolio:str,
         date_to:str = get_date_to(),
@@ -89,7 +89,7 @@ async def get_csv(
         sort:str = None,
         limit:str = None
         ):
-    return await wl.get_portfolio_data_csv(
+    return wl.get_portfolio_data_csv(
         **locals()
         )
 
@@ -97,15 +97,15 @@ async def get_csv(
     "/add_symbols",
     tags = ["Portfolio Manager"]
     )
-async def add_symbols(portfolio:UPortfolio):
-    return await wl.add_portfolio_symbols(
+def add_symbols(portfolio:UPortfolio):
+    return wl.add_portfolio_symbols(
         portfolio.dict()
         )
 @watchlist_routes.post(
     "/drop_symbols",
     tags = ["Portfolio Manager"]
     )
-async def drop_symbols(portfolio:UPortfolio):
-    return await wl.drop_portfolio_symbols(
+def drop_symbols(portfolio:UPortfolio):
+    return wl.drop_portfolio_symbols(
         portfolio.dict()
         )
