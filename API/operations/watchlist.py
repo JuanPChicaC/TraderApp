@@ -328,7 +328,6 @@ def add_portfolio_symbols(portfolio_info:dict):
             UpdateExpression="""
                 SET 
                 symbols_list = :symbols_list, 
-                portfolio = :portfolio, 
                 last_update_datetime = :last_update_datetime,
                 date_to = :date_to,
                 date_from = :date_from,
@@ -338,7 +337,6 @@ def add_portfolio_symbols(portfolio_info:dict):
                 """,
             ExpressionAttributeValues={
                 ":symbols_list": portfolio_info["symbols_list"],
-                ":portfolio": portfolio_info["portfolio"],
                 ":last_update_datetime": portfolio_info["last_update_datetime"],
                 ":date_to": portfolio_info["date_to"],
                 ":date_from": portfolio_info["date_from"],
@@ -401,7 +399,6 @@ def drop_portfolio_symbols(portfolio_info:dict):
             UpdateExpression="""
                 SET 
                 symbols_list = :symbols_list, 
-                portfolio = :portfolio, 
                 last_update_datetime = :last_update_datetime,
                 date_to = :date_to,
                 date_from = :date_from,
@@ -411,7 +408,6 @@ def drop_portfolio_symbols(portfolio_info:dict):
                 """,
             ExpressionAttributeValues={
                 ":symbols_list" : portfolio_info["symbols_list"],
-                ":portfolio" : portfolio_info["portfolio"],
                 ":last_update_datetime" : portfolio_info["last_update_datetime"],
                 ":date_to" : portfolio_info["date_to"],
                 ":date_from" : portfolio_info["date_from"],

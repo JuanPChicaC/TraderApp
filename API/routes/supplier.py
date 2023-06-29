@@ -72,7 +72,7 @@ def get_symbol_bars(
     tags=["Information Provider"]
     
     )
-def get_symbol_bars_csv(
+async def get_symbol_bars_csv(
     stocksTicker:str, date_from:str, date_to:str, multiplier:str=None,
     timespan:str=None,adjusted:str = None,sort:str = None,
     limit:str = None
@@ -84,7 +84,7 @@ def get_symbol_bars_csv(
             **arguments
             )
         
-        df = get_df(
+        df = await get_df(
             answer
             )
         
